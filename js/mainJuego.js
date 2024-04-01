@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         setTimeout(() => {
             guitar.removeChild(note);
-            score--; // Restar un punto si la nota se elimina por tiempo
+            score--; 
             updateScore();
             if (score === -50) {
                 clearInterval(noteInterval);
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     guitar.removeChild(note);
 
-                    score++; // Sumar un punto cuando se toca la nota
+                    score++; 
                     updateScore();
 
                     if (score === 100) {
@@ -66,15 +66,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const notes = document.querySelectorAll('.note');
         notes.forEach(note => {
             const notePosition = parseFloat(note.style.top);
-            if (notePosition > guitar.offsetHeight) { // Revisar si la nota sobrepasa el límite inferior del recuadro
+            if (notePosition > guitar.offsetHeight) { 
                 guitar.removeChild(note);
-                score--; // Restar un punto cuando una nota sobrepasa el límite inferior
+                score--; 
                 updateScore();
             }
         });
     }
 
     document.addEventListener('keydown', handleKeyDown);
-    setInterval(checkNotePosition, 100); // Comprobar continuamente la posición de las notas
+    setInterval(checkNotePosition, 100); 
 
 });
