@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     
     const guitar = document.getElementById('guitar');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreDisplay = document.getElementById('score');
 
     function createNote() {
         const note = document.createElement('div');
@@ -16,21 +18,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         setTimeout(() => {
             guitar.removeChild(note);
-        }, 5000);
-    }
-
-    function handleKeyDown(event) {
-        const key = event.key.toUpperCase();
-        const positions = { 'A': '0%', 'S': '25%', 'J': '50%', 'K': '75%' };
-        if (key in positions) {
-            const notes = document.querySelectorAll('.note');
-            notes.forEach(note => {
-                const notePosition = note.style.left;
-                if (notePosition === positions[key]) {
-                    guitar.removeChild(note); 
-                }
-            });
-        }
+            score--; // Restar un punto si la nota se elimina por tiempo
+            updateScore();
+            if (score === -50) {
+                clearInterval(noteInterval);
+                alert('¡Perdiste!');
+            }
+        }, 900);
     }
 
     let score = 0; 
@@ -38,9 +32,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const bgMusic = document.getElementById('bg-music'); 
     
     function updateScore() {
-        document.getElementById('score').innerText = `Puntaje: ${score}`;
+        scoreDisplay.innerText = `Puntaje: ${score}`;
     }
-
 
     function handleKeyDown(event) {
         const key = event.key.toUpperCase();
@@ -51,16 +44,15 @@ document.addEventListener('DOMContentLoaded', function () {
             notes.forEach(note => {
                 const notePosition = note.style.left;
                 if (notePosition === positions[key]) {
-                    const noteColor = note.classList[1];
                     const audioElement = document.getElementById(`note-${key.toLowerCase()}-audio`);
                     audioElement.play(); 
 
                     guitar.removeChild(note);
 
-                    score++; 
+                    score++; // Sumar un punto cuando se toca la nota
                     updateScore();
 
-                    if (score === 500) {
+                    if (score === 100) {
                         clearInterval(noteInterval); 
                         bgMusic.pause(); 
                         alert('GANO, MUY BIEN :D'); 
@@ -70,7 +62,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    document.addEventListener('keydown', handleKeyDown);
+    function checkNotePosition() {
+        const notes = document.querySelectorAll('.note');
+        notes.forEach(note => {
+            const notePosition = parseFloat(note.style.top);
+            if (notePosition > guitar.offsetHeight) { // Revisar si la nota sobrepasa el límite inferior del recuadro
+                guitar.removeChild(note);
+                score--; // Restar un punto cuando una nota sobrepasa el límite inferior
+                updateScore();
+            }
+        });
+    }
 
+    document.addEventListener('keydown', handleKeyDown);
+    setInterval(checkNotePosition, 100); // Comprobar continuamente la posición de las notas
 
 });
