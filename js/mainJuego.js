@@ -62,18 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function checkNotePosition() {
-        const notes = document.querySelectorAll('.note');
-        notes.forEach(note => {
-            const notePosition = parseFloat(note.style.top);
-            if (notePosition > guitar.offsetHeight) { 
-                guitar.removeChild(note);
-                score--; 
-                updateScore();
-            }
-        });
-    }
-
     document.addEventListener('keydown', handleKeyDown);
     setInterval(checkNotePosition, 100); 
 
